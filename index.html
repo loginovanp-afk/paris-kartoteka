@@ -1,0 +1,1620 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>От бульвара до балкона</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --cream:#F7F3EE;        /* фон сайта */
+  --paper:#FFFFFF;        /* карточки */
+  --ink:#1A1A1A;
+  --ink-soft:#6E6862;
+  --ink-faint:#A69E95;
+  --rule:#E6DFD5;
+  --brand:#B29A6D;        /* золото с сайта: кружки, заливки */
+  --accent:#8A7448;       /* тёмное золото: линии, ссылки, нить */
+  --tint:#F1EADD;
+  --stamp:#7B2E45;        /* винный: метка «проверено» */
+  --warn:#B5502F;         /* кирпичный: «перепроверить» и «уточнить» */
+  --shadow:0 1px 2px rgba(26,26,26,.04), 0 10px 24px -16px rgba(26,26,26,.22);
+  --f-head:"Golos Text","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Inter","Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:var(--cream);color:var(--ink);
+  font-family:var(--f-body);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;
+  overscroll-behavior-y:none;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;}
+input,textarea{font:inherit;color:inherit;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* ── Шапка: логотип сайта ──────────────────────────────── */
+.topbar{
+  flex:0 0 auto;display:flex;align-items:center;gap:11px;
+  padding:11px 16px;border-bottom:1px solid var(--rule);background:var(--paper);
+}
+.topbar .back{font-size:22px;line-height:1;color:var(--accent);padding:0 3px 3px;margin-left:-3px;}
+.brand{display:flex;align-items:center;gap:8px;}
+.brand-mark{font-family:var(--f-head);font-weight:700;font-size:21px;line-height:1;letter-spacing:-.015em;}
+.brand-sub{font-size:8.5px;line-height:1.3;color:var(--ink-soft);}
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;
+  margin-left:auto;flex:0 0 auto;
+}
+
+/* ── Шапка «Маршрутов»: фотография внутри букв ─────────── */
+.hero{margin:0 -16px 20px;padding:10px 16px 18px;text-align:center;}
+.hero .over{
+  font-family:var(--f-head);font-weight:400;font-size:13px;color:var(--ink-soft);
+  margin-bottom:3px;letter-spacing:.01em;
+}
+.hero .rule-thin{
+  display:block;width:74px;height:1px;margin:14px auto 0;
+  background:linear-gradient(90deg,transparent,var(--brand),transparent);
+}
+.hero .paris{
+  display:block;font-family:var(--f-head);font-weight:700;
+  font-size:19.5vw;line-height:.92;letter-spacing:-.02em;
+  /* по умолчанию — золочение: перелив от светлого золота к бронзе */
+  background-image:var(--hero, linear-gradient(112deg,
+    #E4CE9C 0%, #B29A6D 22%, #6B5531 46%, #C0A469 62%, #7A6238 80%, #E8D6A8 100%));
+  background-size:230% 100%;background-position:0% 50%;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  animation:sheen 11s ease-in-out infinite;
+}
+/* фотография, если задана, перебивает золочение и не бликует */
+.hero.photo .paris{background-size:cover;background-position:center;animation:none;}
+@keyframes sheen{
+  0%   {background-position:0% 50%;}
+  50%  {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+@media (prefers-reduced-motion: reduce){ .hero .paris{animation:none;} }
+.hero .under{
+  font-family:var(--f-head);font-weight:400;font-size:5.6vw;line-height:1.1;
+  margin-top:2px;color:var(--ink);
+}
+/* если браузер не умеет вырезать текст — показываем обычными буквами */
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .hero .paris{color:var(--ink);-webkit-text-fill-color:currentColor;background-image:none;}
+}
+
+/* ── Заголовок экрана: бледное слово-подложка, как на сайте ─ */
+.screen-head{position:relative;text-align:center;margin:0 -16px 22px;padding:26px 16px 0;overflow:hidden;}
+.screen-head .wm{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  font-family:var(--f-head);font-weight:700;font-size:56px;line-height:1;
+  color:#F0E3DC;white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:-.025em;
+}
+.screen-head h2{
+  position:relative;margin:0;font-family:var(--f-head);font-weight:400;
+  font-size:26px;line-height:1.2;letter-spacing:-.012em;color:var(--accent);
+}
+.screen-head .rule-mini{position:relative;display:block;width:104px;height:1px;background:var(--rule);margin:16px auto 0;}
+
+main{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 30px;}
+
+/* ── Нижние вкладки ────────────────────────────────────── */
+.tabbar{
+  flex:0 0 auto;display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--rule);background:var(--paper);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tabbar button{
+  padding:12px 4px 14px;font-family:var(--f-head);font-weight:500;font-size:9.5px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);
+}
+.tabbar button.on{color:var(--accent);font-weight:600;box-shadow:inset 0 2px 0 var(--brand);}
+.tabbar[hidden]{display:none;}   /* иначе display:grid перебивает атрибут hidden */
+.tabbar button{position:relative;}
+.tabbar button.has::after{content:"";position:absolute;top:7px;right:12px;
+  width:6px;height:6px;border-radius:50%;background:var(--warn);}
+
+/* ── Изменение порядка точек ───────────────────────────── */
+.ord{
+  display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:11px;align-items:center;
+  background:var(--paper);border:1px solid var(--rule);border-radius:10px;
+  padding:11px 12px;margin-bottom:8px;
+}
+.ord .num{
+  width:26px;height:26px;border-radius:50%;background:var(--tint);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-head);font-weight:600;font-size:12.5px;font-variant-numeric:tabular-nums;
+}
+.ord .nm{display:block;font-family:var(--f-head);font-weight:600;font-size:14.5px;line-height:1.25;}
+.ord .sub{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px;}
+.ord .acts{display:flex;gap:5px;}
+.ord .acts button{
+  width:32px;height:32px;border:1px solid var(--rule);border-radius:8px;
+  color:var(--accent);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;
+}
+.ord .acts button[disabled]{opacity:.28;}
+.ord .acts button.rm{color:var(--warn);}
+
+/* ── Вопросы с прогулки ────────────────────────────────── */
+.qmark{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;
+  padding:0 4px;border-radius:9px;background:var(--warn);color:#fff;font-family:var(--f-head);
+  font-weight:600;font-size:10px;line-height:1;flex:0 0 auto;}
+.q-item{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--warn);
+  border-radius:10px;padding:12px 14px;margin-bottom:9px;}
+.q-item.done{border-left-color:var(--rule);opacity:.62;}
+.q-where{font-family:var(--f-head);font-weight:600;font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--warn);}
+.q-item.done .q-where{color:var(--ink-faint);}
+.q-text{margin:6px 0 0;font-size:15.5px;line-height:1.4;}
+.q-date{font-size:11px;color:var(--ink-faint);margin-top:6px;font-variant-numeric:tabular-nums;}
+.q-acts{display:flex;gap:8px;margin-top:11px;}
+.q-acts button{font-family:var(--f-head);font-weight:500;font-size:10px;letter-spacing:.06em;
+  text-transform:uppercase;border:1px solid var(--rule);border-radius:16px;padding:6px 12px;color:var(--accent);}
+.q-line{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13.5px;color:var(--warn);}
+
+/* ── Белая карточка на кремовом — приём с сайта ────────── */
+.sheet{background:var(--paper);border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow);padding:18px 16px 20px;}
+
+/* ── Плашка маршрута ───────────────────────────────────── */
+.plaque{
+  position:relative;display:block;width:100%;text-align:left;background:var(--paper);
+  border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow);
+  overflow:hidden;margin-bottom:11px;
+}
+.plaque .kicker,.plaque .name{display:block;}
+/* цветная полоса-рубрика сверху карточки */
+.plaque .kicker{
+  background:var(--tint);color:var(--accent);padding:8px 78px 8px 16px;
+  font-family:var(--f-head);font-weight:600;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+}
+.plaque.today .kicker{background:var(--brand);color:#fff;}
+.plaque .name{font-family:var(--f-head);font-weight:600;font-size:20px;line-height:1.2;letter-spacing:-.008em;padding:13px 78px 0 16px;}
+.plaque .mini-thread{margin:11px 16px 15px;}
+/* золотой кружок времени — прямая цитата с сайта */
+.badge{
+  position:absolute;top:38px;right:14px;width:52px;height:52px;border-radius:50%;
+  background:var(--brand);color:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;line-height:1.15;
+}
+.badge b{font-family:var(--f-head);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;}
+.badge span{font-size:9.5px;opacity:.92;}
+.plaque.ghost{border:1px dashed var(--rule);box-shadow:none;background:transparent;text-align:center;}
+.plaque.ghost .name{font-size:13px;font-weight:500;color:var(--ink-soft);padding:16px;}
+
+/* ── Нить: отрезок ─────────────────────────────────────── */
+.mini-thread{display:flex;align-items:center;margin-top:10px;}
+.mini-thread i{width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:var(--accent);opacity:.45;}
+.mini-thread i:first-child,.mini-thread i:last-child{width:6px;height:6px;opacity:.95;}
+.mini-thread s{flex:1 1 auto;height:1px;background:var(--accent);opacity:.28;max-width:18px;text-decoration:none;}
+
+/* ── Нить: вертикаль ───────────────────────────────────── */
+.route-list{display:flex;flex-direction:column;}
+.stop{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:9px 0;width:100%;text-align:left;}
+.stop .rail{position:relative;display:flex;justify-content:center;}
+.stop .rail::before{content:"";position:absolute;left:50%;transform:translateX(-50%);top:-9px;bottom:-9px;width:1.5px;background:var(--rule);}
+.stop:first-child .rail::before{top:10px;}
+.stop:last-child .rail::before{bottom:calc(100% - 10px);}
+.stop.done .rail::before{background:var(--brand);}
+.stop.now .rail::before{background:var(--brand);bottom:50%;}
+.dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--brand);background:var(--paper);position:relative;z-index:1;margin-top:5px;flex:0 0 auto;}
+.stop.done .dot{background:var(--brand);}
+.stop.now .dot{width:14px;height:14px;border-width:2.5px;border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px rgba(178,154,109,.28);margin-top:2px;}
+.stop .who b{display:block;font-family:var(--f-head);font-weight:500;font-size:14px;line-height:1.3;}
+.stop .who em{display:block;font-style:normal;font-size:12px;color:var(--ink-soft);margin-top:2px;font-variant-numeric:tabular-nums;}
+.stop.done .who b,.stop.done .who em{opacity:.42;}
+.stop.now .who b{font-weight:600;}
+
+/* ── Нить: полоска положения ───────────────────────────── */
+.pos-thread{display:flex;align-items:center;margin-bottom:15px;}
+.pos-thread i{width:6px;height:6px;border-radius:50%;flex:0 0 auto;border:1.5px solid var(--brand);background:var(--paper);opacity:.55;}
+.pos-thread i.done{background:var(--brand);}
+.pos-thread i.now{width:12px;height:12px;border-width:2.5px;border-color:var(--accent);background:var(--accent);opacity:1;}
+.pos-thread s{flex:1 1 auto;height:1.5px;background:var(--brand);opacity:.25;text-decoration:none;}
+.pos-thread s.done{opacity:.6;}
+
+/* ── Шпаргалка ─────────────────────────────────────────── */
+.pos-label{font-family:var(--f-head);font-weight:500;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--brand);font-variant-numeric:tabular-nums;}
+.cheat-name{font-family:var(--f-head);font-weight:600;font-size:25px;line-height:1.14;margin-top:6px;letter-spacing:-.01em;}
+.theses{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:13px;}
+.theses li{display:grid;grid-template-columns:13px minmax(0,1fr);gap:10px;font-size:17.5px;line-height:1.42;}
+.theses li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--brand);margin-top:9px;}
+.theses li.ask::before{background:var(--warn);}
+.ask-tag{
+  font-family:var(--f-head);font-weight:600;font-size:9.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--warn);border:1px solid var(--warn);
+  border-radius:3px;padding:1px 5px;margin-left:6px;white-space:nowrap;vertical-align:2px;
+}
+.photo-slot{margin:0 0 18px;border:1px solid var(--rule);border-radius:10px;overflow:hidden;}
+.photo-slot img{display:block;width:100%;height:auto;}
+.photo-empty{
+  height:88px;display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(-45deg,#F2ECE2 0 9px,#F8F4EE 9px 18px);
+  font-family:var(--f-head);font-weight:500;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);
+}
+
+details.service{margin-top:22px;border-top:1px solid var(--rule);padding-top:13px;}
+details.service summary{
+  list-style:none;font-family:var(--f-head);font-weight:500;font-size:10px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;
+}
+details.service summary::-webkit-details-marker{display:none;}
+details.service summary::after{content:" ▾";}
+details.service[open] summary::after{content:" ▴";}
+.service-body{margin-top:12px;font-size:14.5px;color:var(--ink-soft);display:flex;flex-direction:column;gap:9px;}
+.service-body .addr{font-family:var(--f-head);font-weight:500;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.7;}
+
+.stamp{
+  align-self:flex-start;border:1.5px solid var(--stamp);color:var(--stamp);border-radius:3px;
+  padding:6px 10px;font-family:var(--f-head);font-weight:600;font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;line-height:1.5;text-align:center;transform:rotate(-2deg);
+  font-variant-numeric:tabular-nums;margin-top:4px;
+}
+.stamp.stale{border-color:var(--warn);color:var(--warn);transform:rotate(1.5deg);}
+.stamp.none{border-color:var(--ink-faint);color:var(--ink-faint);transform:none;}
+
+.primary{
+  display:block;width:100%;background:var(--accent);color:#fff;border-radius:9px;
+  padding:16px;text-align:center;font-size:16px;font-weight:500;margin-top:24px;
+}
+.secondary.danger{color:var(--warn);border-color:#E8D5CC;}
+.secondary{
+  display:block;width:100%;border:1px solid var(--rule);background:var(--paper);border-radius:9px;
+  padding:13px;text-align:center;font-size:13px;color:var(--accent);margin-top:10px;
+  font-family:var(--f-head);font-weight:500;letter-spacing:.05em;text-transform:uppercase;
+}
+
+/* ── База ──────────────────────────────────────────────── */
+.search{width:100%;border:1px solid var(--rule);border-radius:9px;padding:12px 14px;background:var(--paper);font-size:16px;margin-bottom:12px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.chip{font-size:12.5px;color:var(--accent);background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:5px 11px;}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+.rec{
+  display:block;width:100%;text-align:left;background:var(--paper);
+  border:1px solid var(--rule);border-radius:10px;padding:13px 15px;margin-bottom:9px;
+}
+.rec .line1{display:flex;align-items:center;gap:8px;}
+.rec .nm{font-family:var(--f-head);font-weight:600;font-size:15.5px;line-height:1.25;}
+.rec .flag{width:7px;height:7px;border-radius:50%;flex:0 0 auto;background:var(--stamp);}
+.rec .flag.stale{background:var(--warn);}
+.rec .flag.none{background:var(--ink-faint);}
+.rec .line2{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:3px;font-variant-numeric:tabular-nums;}
+
+details.fgroup{border-bottom:1px solid var(--rule);}
+details.fgroup summary{
+  list-style:none;cursor:pointer;padding:11px 0;
+  font-family:var(--f-head);font-weight:600;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--brand);display:flex;justify-content:space-between;gap:8px;
+}
+details.fgroup summary::-webkit-details-marker{display:none;}
+details.fgroup summary i{font-style:normal;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+details.fgroup summary::after{content:"▾";color:var(--ink-faint);}
+details.fgroup[open] summary::after{content:"▴";}
+details.fgroup .chips{margin:2px 0 13px;}
+
+/* ── Карточка объекта ──────────────────────────────────── */
+.rec-head{
+  font-family:var(--f-head);font-weight:500;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--brand);display:flex;justify-content:space-between;gap:10px;padding-bottom:11px;border-bottom:1px solid var(--rule);
+}
+.obj-name{font-family:var(--f-head);font-weight:600;font-size:27px;line-height:1.12;margin-top:14px;letter-spacing:-.012em;}
+.obj-fr{font-size:14px;color:var(--ink-soft);margin-top:4px;font-style:italic;}
+.people{margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+.person{font-size:14.5px;line-height:1.3;text-align:left;}
+.person b{font-weight:500;border-bottom:1.5px solid var(--brand);padding-bottom:1px;}
+.person span{font-family:var(--f-head);font-weight:500;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-left:6px;}
+
+/* ── Заметки ───────────────────────────────────────────── */
+textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--paper);font-size:16px;min-height:100px;resize:vertical;}
+.note-item{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start;}
+.note-item p{margin:0;flex:1 1 auto;font-size:15px;white-space:pre-wrap;word-break:break-word;}
+.note-item time{display:block;font-family:var(--f-head);font-weight:500;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--brand);margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.note-item .del{color:var(--ink-faint);font-size:18px;line-height:1;padding:2px 4px;flex:0 0 auto;}
+
+/* ── Сборка маршрута ───────────────────────────────────── */
+.pick{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.pick.on{border-color:var(--brand);background:var(--tint);}
+.box{width:20px;height:20px;border:1.5px solid var(--brand);border-radius:5px;flex:0 0 auto;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;line-height:1;}
+.pick.on .box{background:var(--brand);}
+.pick .pnm{display:block;font-family:var(--f-head);font-weight:600;font-size:14.5px;}
+.pick .psub{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+
+/* ── Служебное ─────────────────────────────────────────── */
+.h-sec{font-family:var(--f-head);font-weight:600;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--brand);margin:22px 0 11px;}
+.h-sec:first-child{margin-top:0;}
+.empty{color:var(--ink-soft);font-size:14.5px;padding:26px 0;text-align:center;}
+.banner{background:var(--tint);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink-soft);margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;}
+.banner button{color:var(--accent);font-size:17px;line-height:1;flex:0 0 auto;}
+.fail{padding:36px 4px;text-align:center;}
+.fail h2{font-family:var(--f-head);font-weight:600;font-size:19px;margin:0 0 10px;}
+.fail p{color:var(--ink-soft);font-size:14.5px;margin:0 auto 16px;max-width:34ch;}
+.saving{font-size:12px;color:var(--ink-faint);text-align:center;padding:14px 0 0;}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="back" id="back" hidden aria-label="Назад">‹</button>
+  <div class="brand">
+    <span class="brand-mark">Paris</span>
+    <span class="brand-sub">от бульвара<br>до балкона</span>
+  </div>
+  <span id="title" hidden></span>
+  <button class="icon-btn" id="quick-note" aria-label="Быстрая заметка">✎</button>
+</header>
+
+<main id="app"></main>
+
+<nav class="tabbar" id="tabbar" hidden>
+  <button data-tab="routes" class="on">Маршруты</button>
+  <button data-tab="base">База</button>
+  <button data-tab="questions">Вопросы</button>
+  <button data-tab="notes">Заметка</button>
+</nav>
+
+<!-- Запасная копия базы. Работает, только если data.json не открылся. -->
+<script type="application/json" id="fallback-data">{
+  "meta": {
+    "title": "Парижская картотека",
+    "version": 1,
+    "demo": true,
+    "demoNotice": "Демо-данные: тезисы написаны как пример интонации, факты не проверены. Замени своими. Знак вопроса в начале строки ставит метку «уточнить».",
+    "staleAfterDays": 180
+  },
+  "types": [
+    "универмаг",
+    "жильё",
+    "метро",
+    "гостиница",
+    "кафе",
+    "мастерская",
+    "церковь",
+    "музей",
+    "улица",
+    "витрина",
+    "другое"
+  ],
+  "roles": [
+    "архитектор",
+    "инженер",
+    "дизайнер",
+    "заказчик",
+    "жил здесь",
+    "работал здесь"
+  ],
+  "styles": [
+    "ар-нуво",
+    "ар-деко",
+    "османовский",
+    "модернизм",
+    "современность"
+  ],
+  "objects": [
+    {
+      "id": "samaritaine",
+      "name": "Самаритен",
+      "nameFr": "La Samaritaine",
+      "type": "универмаг",
+      "arr": 1,
+      "address": "9 rue de la Monnaie",
+      "metro": "Pont-Neuf",
+      "minutes": 12,
+      "people": [
+        {
+          "name": "Франц Журден",
+          "role": "архитектор"
+        },
+        {
+          "name": "Анри Соваж",
+          "role": "архитектор"
+        }
+      ],
+      "styles": [
+        "ар-нуво",
+        "ар-деко"
+      ],
+      "tags": [
+        "витрины",
+        "стекло",
+        "универмаги"
+      ],
+      "theses": [
+        "название — от старого водоподъёмного насоса на Пон-Нёф, его звали «Самаритянка»",
+        "железный каркас не стали прятать под камень — для универмага это было заявлением",
+        "павлины на эмалевом панно лестницы",
+        "? магазин простоял закрытым около шестнадцати лет — цифру проверить",
+        "два почерка на разных фасадах: Журден — растительный, Соваж позже — строгий"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Группу ставить в атриуме у колонны, там не мешаем потоку. Туалеты на минус первом. Часы работы уточнять — меняются.",
+      "source": "проверить: даты и авторство фасадов",
+      "checkedAt": "2026-07-15",
+      "perishable": true
+    },
+    {
+      "id": "lavirotte",
+      "name": "Дом Лавиротта",
+      "nameFr": "Immeuble Lavirotte",
+      "type": "жильё",
+      "arr": 7,
+      "address": "29 avenue Rapp",
+      "metro": "Alma – Marceau",
+      "minutes": 10,
+      "people": [
+        {
+          "name": "Жюль Лавиротт",
+          "role": "архитектор"
+        },
+        {
+          "name": "Александр Биго",
+          "role": "дизайнер"
+        }
+      ],
+      "styles": [
+        "ар-нуво"
+      ],
+      "tags": [
+        "керамика",
+        "фасады",
+        "двери"
+      ],
+      "theses": [
+        "над дверью — женская фигура, по фасаду разбежались ящерицы",
+        "керамику жёг Александр Биго, он же снабжал половину соседей по эпохе",
+        "? фасад получил городскую премию за лучший фасад года — год уточнить",
+        "? в резьбе двери современники находили неприличное и до сих пор ищут глазами",
+        "дом жилой, внутрь не попасть — сразу сказать, чтобы не тянулись к домофону"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Ставить группу через дорогу — вблизи фасад целиком не видно. Утром солнце бьёт в фасад, снимать лучше после обеда.",
+      "source": "проверить: год и премия",
+      "checkedAt": "2026-06-02",
+      "perishable": false
+    },
+    {
+      "id": "maison-de-verre",
+      "name": "Стеклянный дом",
+      "nameFr": "Maison de Verre",
+      "type": "жильё",
+      "arr": 7,
+      "address": "31 rue Saint-Guillaume",
+      "metro": "Rue du Bac",
+      "minutes": 8,
+      "people": [
+        {
+          "name": "Пьер Шаро",
+          "role": "архитектор"
+        },
+        {
+          "name": "Бернар Бейвут",
+          "role": "архитектор"
+        }
+      ],
+      "styles": [
+        "модернизм"
+      ],
+      "tags": [
+        "стекло",
+        "интерьеры",
+        "во дворе"
+      ],
+      "theses": [
+        "весь фасад из стеклоблоков — конец 1920-х, так не делал никто",
+        "? дом встроили под старую квартиру: жилец верхнего этажа отказался съезжать — проверить",
+        "заказчик был врач: внизу принимал пациентов, наверху жила семья",
+        "мебель и лестницы двигаются — дом задуман как механизм, а не как коробка",
+        "хорошая пара к Ла Рюш: два ответа на вопрос, как жить и работать в одном доме"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Объект во дворе, снаружи почти не виден — предупредить заранее. Доступ непредсказуем, всегда держать запасную точку рядом.",
+      "source": "проверить: условия доступа, они меняются",
+      "checkedAt": "2025-11-03",
+      "perishable": true
+    },
+    {
+      "id": "la-ruche",
+      "name": "Ла Рюш",
+      "nameFr": "La Ruche",
+      "type": "мастерская",
+      "arr": 15,
+      "address": "2 passage de Dantzig",
+      "metro": "Convention",
+      "minutes": 15,
+      "people": [
+        {
+          "name": "Марк Шагал",
+          "role": "работал здесь"
+        },
+        {
+          "name": "Хаим Сутин",
+          "role": "работал здесь"
+        }
+      ],
+      "styles": [],
+      "tags": [
+        "мастерские",
+        "русский париж",
+        "ротонда"
+      ],
+      "theses": [
+        "ротонда, внутри мастерские клиньями — как соты, отсюда и «улей»",
+        "? каркас, говорят, достался от павильона Всемирной выставки — проверить",
+        "здесь работали Шагал и Сутин, когда были совсем бедны",
+        "? у Шагала есть об этом месте в воспоминаниях — найти цитату",
+        "мастерские до сих пор рабочие: во дворе живые художники, а не музей"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Далеко от центра, закладывать дорогу. Говорить вполголоса — там работают. Кофе на rue de la Convention.",
+      "source": "проверить: кто именно работал и в какие годы",
+      "checkedAt": "2026-05-20",
+      "perishable": false
+    },
+    {
+      "id": "bon-marche",
+      "name": "Бон Марше",
+      "nameFr": "Le Bon Marché",
+      "type": "универмаг",
+      "arr": 7,
+      "address": "24 rue de Sèvres",
+      "metro": "Sèvres – Babylone",
+      "minutes": 20,
+      "people": [
+        {
+          "name": "Аристид Бусико",
+          "role": "заказчик"
+        }
+      ],
+      "styles": [
+        "османовский"
+      ],
+      "tags": [
+        "универмаги",
+        "витрины",
+        "литература"
+      ],
+      "theses": [
+        "твёрдая цена и свободный вход — до этого в лавке торговались, а зайти просто посмотреть было неловко",
+        "Золя ходил сюда за материалом и написал «Дамское счастье»",
+        "? хозяин Бусико, после его смерти дело продолжила жена — проверить детали",
+        "верхний свет и лестницы — показать, как устроен спектакль для покупателя",
+        "? часы работы в праздники плавают — проверять накануне"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Начинать отсюда: рядом метро и есть где собрать группу.",
+      "source": "проверить: формулировку «первый универмаг», она спорная",
+      "checkedAt": "2026-08-01",
+      "perishable": true
+    },
+    {
+      "id": "porte-dauphine",
+      "name": "Порт-Дофин",
+      "nameFr": "Édicule Guimard, Porte Dauphine",
+      "type": "метро",
+      "arr": 16,
+      "address": "avenue Foch",
+      "metro": "Porte Dauphine",
+      "minutes": 8,
+      "people": [
+        {
+          "name": "Эктор Гимар",
+          "role": "архитектор"
+        }
+      ],
+      "styles": [
+        "ар-нуво"
+      ],
+      "tags": [
+        "метро",
+        "чугун",
+        "стекло"
+      ],
+      "theses": [
+        "буквы METROPOLITAIN рисовал сам Гимар — это не шрифт, это рисунок",
+        "чугун притворяется стеблем: показать, где стебель переходит в фонарь",
+        "? входов с навесом сохранилось совсем мало — число уточнить",
+        "? публика ругала эти входы за «немецкий» вид, часть потом сняли — проверить",
+        "отсюда удобно говорить о том, как город принимал и не принимал ар-нуво"
+      ],
+      "photos": [],
+      "links": [],
+      "note": "Пересадка неудобная, закладывать лишние 10 минут.",
+      "source": "проверить: сколько входов Гимара сохранилось",
+      "checkedAt": "2026-04-18",
+      "perishable": false
+    }
+  ],
+  "routes": [
+    {
+      "id": "shops",
+      "title": "Магазины",
+      "when": "сегодня · 14:00",
+      "stops": [
+        "bon-marche",
+        "samaritaine"
+      ]
+    },
+    {
+      "id": "art-nouveau",
+      "title": "Ар-нуво в деталях",
+      "when": "",
+      "stops": [
+        "porte-dauphine",
+        "lavirotte",
+        "samaritaine"
+      ]
+    },
+    {
+      "id": "how-to-live",
+      "title": "Как жить и работать",
+      "when": "",
+      "stops": [
+        "maison-de-verre",
+        "la-ruche"
+      ]
+    }
+  ]
+}</script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── Telegram ─────────────────────────────────────────── */
+  var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+
+  /* ── Хранилище: CloudStorage, иначе localStorage ──────── */
+  var cloud = (tg && tg.CloudStorage && typeof tg.CloudStorage.getItem === "function") ? tg.CloudStorage : null;
+
+  function safeParse(raw){ if (!raw) return null; try { return JSON.parse(raw); } catch (e) { return null; } }
+  function localGet(key){ try { return safeParse(localStorage.getItem("kartoteka_" + key)); } catch (e) { return null; } }
+  function storeGet(key){
+    return new Promise(function(resolve){
+      if (cloud) {
+        try {
+          cloud.getItem("kartoteka_" + key, function(err, val){
+            resolve((err || !val) ? localGet(key) : safeParse(val));
+          });
+          return;
+        } catch (e) {}
+      }
+      resolve(localGet(key));
+    });
+  }
+  function storeSet(key, value){
+    var raw = JSON.stringify(value);
+    try { localStorage.setItem("kartoteka_" + key, raw); } catch (e) {}
+    if (cloud) { try { cloud.setItem("kartoteka_" + key, raw, function(){}); } catch (e) {} }
+  }
+
+  /* ── Состояние ────────────────────────────────────────── */
+  var FORCE_EMBEDDED = false;   // демо-сборка ставит true и живёт без data.json
+  var DATA = null;
+  var custom = [];
+  var progress = {};
+  var notes = [];
+  var draft = { title: "", ids: [] };
+  var filter = { q: "", facet: null };
+  var view = { name: "routes" };
+  var stack = [];
+  var bannerOff = false;
+  var allPeople = false;   // раскрыт ли полный список имён
+  var rmeta = {};          // переименования и скрытия маршрутов
+  var renaming = false;
+  var questions = [];      // вопросы с прогулки
+  var asking = null;       // объект, для которого открыта форма
+
+  var app = document.getElementById("app");
+  var titleEl = document.getElementById("title");
+  var backEl = document.getElementById("back");
+  var tabbar = document.getElementById("tabbar");
+
+  /* ── Утилиты ──────────────────────────────────────────── */
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function byId(id){
+    for (var i = 0; i < DATA.objects.length; i++) if (DATA.objects[i].id === id) return DATA.objects[i];
+    return null;
+  }
+  function openQ(objId){
+    return questions.filter(function(q){ return q.obj === objId && !q.done; }).length;
+  }
+  function today(){
+    var d = new Date();
+    return ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "." + String(d.getFullYear()).slice(-2);
+  }
+  /* Форма записи вопроса — одна и та же на шпаргалке и в карточке */
+  function askHTML(objId){
+    if (asking !== objId) {
+      return '<button class="secondary" data-ask="' + esc(objId) + '">＋ Записать вопрос</button>';
+    }
+    return '<textarea class="note-input" id="qi" style="min-height:76px;margin-top:10px" ' +
+           'placeholder="О чём спросили? Ответ найдёшь дома."></textarea>' +
+           '<button class="primary" id="q-ok" style="margin-top:10px">Сохранить вопрос</button>' +
+           '<button class="secondary" id="q-no">Отмена</button>';
+  }
+  function askHandle(e, objId){
+    if (e.target.closest("[data-ask]")) { asking = e.target.closest("[data-ask]").getAttribute("data-ask"); render(); return true; }
+    if (e.target.closest("#q-no")) { asking = null; render(); return true; }
+    if (e.target.closest("#q-ok")) {
+      var t = document.getElementById("qi").value.trim();
+      if (t) {
+        questions.unshift({ id: "q" + Date.now(), obj: objId, text: t, done: false, date: today() });
+        if (questions.length > 200) questions = questions.slice(0, 200);
+        storeSet("questions", questions);
+      }
+      asking = null;
+      render();
+      return true;
+    }
+    return false;
+  }
+
+  function allRoutes(){
+    return (DATA.routes || []).concat(custom).filter(function(r){
+      return !(rmeta[r.id] && rmeta[r.id].hidden);
+    });
+  }
+  function routeStops(r){
+    var o = rmeta[r.id] && rmeta[r.id].stops;
+    return (Array.isArray(o) && o.length) ? o : r.stops;
+  }
+  function setStops(r, arr){
+    rmeta[r.id] = rmeta[r.id] || {};
+    rmeta[r.id].stops = arr.slice();
+    storeSet("rmeta", rmeta);
+  }
+  function routeTitle(r){
+    return (rmeta[r.id] && rmeta[r.id].title) || r.title;
+  }
+  function isCustom(id){
+    return custom.some(function(r){ return r.id === id; });
+  }
+  function routeById(id){
+    var r = allRoutes();
+    for (var i = 0; i < r.length; i++) if (r[i].id === id) return r[i];
+    return null;
+  }
+  function totalMinutes(stops){
+    var sum = 0;
+    for (var i = 0; i < stops.length; i++){ var o = byId(stops[i]); if (o) sum += (o.minutes || 0); }
+    return sum;
+  }
+  /* Золотой кружок с сайта: считает точки маршрута */
+  function badgeParts(n){
+    if (!n) return null;
+    return { n: String(n), u: plural(n, "точка", "точки", "точек") };
+  }
+  /* Заголовок экрана с бледным словом-подложкой */
+  function head(wm, title){
+    return '<div class="screen-head"><span class="wm">' + esc(wm) + "</span>" +
+           "<h2>" + esc(title) + '</h2><span class="rule-mini"></span></div>';
+  }
+  function plural(n, one, few, many){
+    var a = Math.abs(n) % 100, b = a % 10;
+    if (a > 10 && a < 20) return many;
+    if (b > 1 && b < 5) return few;
+    if (b === 1) return one;
+    return many;
+  }
+  function daysSince(iso){
+    if (!iso) return null;
+    var t = Date.parse(iso);
+    return isNaN(t) ? null : Math.floor((Date.now() - t) / 86400000);
+  }
+  /* Умный штамп: гаснет только там, где данные скоропортящиеся */
+  function stampState(o){
+    var d = daysSince(o.checkedAt);
+    if (d === null) return "none";
+    var limit = (DATA.meta && DATA.meta.staleAfterDays) || 180;
+    return (o.perishable && d > limit) ? "stale" : "ok";
+  }
+  function stampText(o){
+    var st = stampState(o);
+    if (st === "none") return "Не проверено";
+    var d = new Date(o.checkedAt);
+    var date = ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "." + String(d.getFullYear()).slice(-2);
+    return (st === "stale" ? "Перепроверить<br>с " : "Проверено<br>") + date;
+  }
+
+  /* Один живой обработчик кликов: при смене экрана старый снимается */
+  var handler = null;
+  function on(fn){
+    if (handler) app.removeEventListener("click", handler);
+    handler = fn;
+    app.addEventListener("click", handler);
+  }
+
+  /* Тезис, начатый со знака вопроса, получает метку «уточнить» */
+  function thesisHTML(t){
+    var ask = /^\?\s*/.test(t);
+    var text = String(t).replace(/^\?\s*/, "");
+    return '<li class="' + (ask ? "ask" : "") + '"><span>' + esc(text) +
+           (ask ? ' <b class="ask-tag">уточнить</b>' : "") + "</span></li>";
+  }
+
+  /* ── Навигация ────────────────────────────────────────── */
+  function go(next, keepStack){
+    renaming = false;
+    asking = null;
+    if (!keepStack) stack.push(JSON.parse(JSON.stringify(view)));
+    view = next;
+    render();
+  }
+  function back(){ if (stack.length) { view = stack.pop(); render(); } }
+  function tab(name){ stack = []; renaming = false; asking = null; view = { name: name }; render(); }
+
+  backEl.addEventListener("click", back);
+  document.getElementById("quick-note").addEventListener("click", function(){ tab("notes"); });
+  tabbar.addEventListener("click", function(e){
+    var b = e.target.closest("button[data-tab]");
+    if (b) tab(b.getAttribute("data-tab"));
+  });
+
+  /* ── Отрисовка ────────────────────────────────────────── */
+  function render(){
+    backEl.hidden = stack.length === 0;
+    tabbar.hidden = (view.name === "cheat");
+
+    var root = stack.length ? stack[0].name : view.name;
+    var openCount = questions.filter(function(q){ return !q.done; }).length;
+    Array.prototype.forEach.call(tabbar.querySelectorAll("button"), function(b){
+      var t = b.getAttribute("data-tab");
+      b.classList.toggle("on", t === root);
+      b.classList.toggle("has", t === "questions" && openCount > 0);
+    });
+
+    var v = view.name;
+    if (v === "routes")      viewRoutes();
+    else if (v === "route")  viewRoute();
+    else if (v === "cheat")  viewCheat();
+    else if (v === "base")   viewBase();
+    else if (v === "object") viewObject();
+    else if (v === "facet")  viewFacet();
+    else if (v === "notes")  viewNotes();
+    else if (v === "build")  viewBuild();
+    else if (v === "digest") viewDigest();
+    else if (v === "questions") viewQuestions();
+    else if (v === "reorder") viewReorder();
+    app.scrollTop = 0;
+
+    if (tg && tg.BackButton) {
+      try { stack.length ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
+    }
+  }
+
+  function bannerHTML(){
+    if (bannerOff || !DATA.meta || !DATA.meta.demo) return "";
+    return '<div class="banner"><span>' + esc(DATA.meta.demoNotice) +
+           '</span><button id="banner-x" aria-label="Скрыть">×</button></div>';
+  }
+
+  /* ── 1. Список маршрутов ──────────────────────────────── */
+  function viewRoutes(){
+    titleEl.textContent = "Маршруты";
+    var hero = DATA.meta && DATA.meta.heroImage;
+    var list = allRoutes();
+    var html = '<div class="hero' + (hero ? " photo" : "") + '"' +
+      (hero ? ' style="--hero:url(&quot;' + esc(hero) + '&quot;)"' : "") + ">" +
+        '<div class="over">Авторские прогулки с Натальей Логиновой</div>' +
+        '<span class="paris">PARIS</span>' +
+        '<div class="under">от бульвара до балкона</div>' +
+        '<span class="rule-thin"></span>' +
+      "</div>";
+    html += bannerHTML();
+    if (!list.length) html += '<p class="empty">Маршрутов пока нет.<br>Собери первый.</p>';
+
+    list.forEach(function(r){
+      var n = routeStops(r).length, b = badgeParts(n), thread = "";
+      for (var j = 0; j < n; j++) thread += (j ? "<s></s>" : "") + "<i></i>";
+      html += '<button class="plaque' + (r.when ? " today" : "") + '" data-route="' + esc(r.id) + '">' +
+                '<span class="kicker">' + esc(r.when || "Маршрут") + '</span>' +
+                '<span class="name">' + esc(routeTitle(r)) + '</span>' +
+                '<span class="mini-thread">' + thread + '</span>' +
+                (b ? '<span class="badge"><b>' + b.n + "</b><span>" + b.u + "</span></span>" : "") +
+              "</button>";
+    });
+    html += '<button class="plaque ghost" id="new-route"><span class="name">+ собрать новый</span></button>';
+    app.innerHTML = html;
+
+    on(function(e){
+      if (e.target.closest("#banner-x")) { bannerOff = true; render(); return; }
+      if (e.target.closest("#new-route")) { draft = { title: "", ids: [] }; go({ name: "build" }); return; }
+      var p = e.target.closest("[data-route]");
+      if (p) go({ name: "route", id: p.getAttribute("data-route") });
+    });
+  }
+
+  /* ── 2. Маршрут изнутри ───────────────────────────────── */
+  function viewRoute(){
+    var r = routeById(view.id);
+    if (!r) { tab("routes"); return; }
+    titleEl.textContent = routeTitle(r);
+
+    var stops = routeStops(r);
+    var cur = Math.min(progress[r.id] || 0, Math.max(0, stops.length - 1));
+    var html = head("Маршрут", routeTitle(r));
+    if (renaming) {
+      html += '<input class="search" id="rn" type="text" value="' + esc(routeTitle(r)) + '">' +
+              '<button class="primary" id="rn-ok" style="margin-top:0">Сохранить название</button>' +
+              '<button class="secondary" id="rn-no">Отмена</button>';
+    }
+    html += '<div class="sheet"><div class="route-list">';
+    stops.forEach(function(id, i){
+      var o = byId(id);
+      if (!o) return;
+      var cls = i < cur ? "done" : (i === cur ? "now" : "");
+      html += '<button class="stop ' + cls + '" data-i="' + i + '">' +
+                '<span class="rail"><span class="dot"></span></span>' +
+                '<span class="who"><b>' + esc(o.name) + '</b><em>' +
+                esc(o.arr) + '-й округ</em></span></button>';
+    });
+    html += "</div></div>";
+    html += '<button class="primary" id="start">' +
+            (cur > 0 ? "Продолжить с " + (cur + 1) + "-й точки" : "Начать прогулку") + "</button>";
+    if (cur > 0) html += '<button class="secondary" id="reset">Начать сначала</button>';
+    html += '<button class="secondary" id="reorder">Изменить состав и порядок</button>';
+    html += '<button class="secondary" id="digest">Ваша прогулка · для группы</button>';
+    html += '<button class="secondary" id="rename">Переименовать</button>';
+    html += '<button class="secondary danger" id="drop">Убрать маршрут</button>';
+    app.innerHTML = html;
+
+    var rn = document.getElementById("rn");
+    if (rn) rn.focus();
+
+    on(function(e){
+      var s = e.target.closest("[data-i]");
+      if (s) { go({ name: "cheat", route: r.id, i: parseInt(s.getAttribute("data-i"), 10) }); return; }
+      if (e.target.closest("#start")) { go({ name: "cheat", route: r.id, i: cur }); return; }
+      if (e.target.closest("#reset")) { progress[r.id] = 0; storeSet("progress", progress); render(); return; }
+      if (e.target.closest("#reorder")) { go({ name: "reorder", route: r.id }); return; }
+      if (e.target.closest("#digest")) { go({ name: "digest", route: r.id }); return; }
+      if (e.target.closest("#rename")) { renaming = true; render(); return; }
+      if (e.target.closest("#rn-no")) { renaming = false; render(); return; }
+      if (e.target.closest("#rn-ok")) {
+        var v = document.getElementById("rn").value.trim();
+        if (v) {
+          rmeta[r.id] = rmeta[r.id] || {};
+          rmeta[r.id].title = v;
+          storeSet("rmeta", rmeta);
+        }
+        renaming = false;
+        render();
+        return;
+      }
+      if (e.target.closest("#drop")) {
+        confirmBox("Убрать маршрут «" + routeTitle(r) + "»? Объекты останутся в базе.", function(){
+          if (isCustom(r.id)) {
+            custom = custom.filter(function(x){ return x.id !== r.id; });
+            storeSet("routes", custom);
+          } else {
+            rmeta[r.id] = rmeta[r.id] || {};
+            rmeta[r.id].hidden = true;
+            storeSet("rmeta", rmeta);
+          }
+          tab("routes");
+        });
+      }
+    });
+  }
+
+  /* ── Конспект для группы ──────────────────────────────── */
+  function digestText(r){
+    var out = routeTitle(r) + "\n";
+    out += "Paris: от бульвара до балкона · Наталья Логинова\n";
+    out += "boulevard-balcon.fr\n\n";
+    routeStops(r).forEach(function(id, i){
+      var o = byId(id);
+      if (!o) return;
+      out += (i + 1) + ". " + o.name + (o.nameFr ? " (" + o.nameFr + ")" : "") + "\n";
+      out += "   " + o.address + ", " + o.arr + "-й округ\n";
+      /* непроверенное в конспект не идёт */
+      (o.theses || []).filter(function(t){ return !/^\?\s*/.test(t); })
+        .slice(0, 3).forEach(function(t){ out += "   \u2014 " + t + "\n"; });
+      out += "\n";
+    });
+    return out;
+  }
+  function viewDigest(){
+    var r = routeById(view.route);
+    if (!r) { tab("routes"); return; }
+    titleEl.textContent = "Ваша прогулка";
+    var txt = digestText(r);
+    var html = head("На память", "Ваша прогулка");
+    html += '<p style="font-size:14px;color:var(--ink-soft);margin:0 0 14px">' +
+            'Тезисы с меткой «уточнить» сюда не попадают — клиенту уходит только проверенное.</p>';
+    html += '<textarea class="note-input" id="dg" readonly style="min-height:320px;font-size:14px">' + esc(txt) + "</textarea>";
+    html += '<button class="primary" id="copy">Скопировать текст</button>';
+    html += '<p class="saving">Вставь в письмо, Word или заметку — оттуда сохраняется в PDF.</p>';
+    app.innerHTML = html;
+
+    on(function(e){
+      if (!e.target.closest("#copy")) return;
+      var ta = document.getElementById("dg");
+      var btn = document.getElementById("copy");
+      var done = function(){ btn.textContent = "Скопировано"; };
+      var manual = function(){
+        ta.focus(); ta.select();
+        btn.textContent = "Текст выделен — скопируй вручную";
+      };
+      var legacy = function(){
+        ta.focus(); ta.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (err) {}
+        ok ? done() : manual();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done, legacy);
+      } else {
+        legacy();
+      }
+    });
+  }
+
+  /* ── 3. Шпаргалка ─────────────────────────────────────── */
+  function viewCheat(){
+    var r = routeById(view.route);
+    if (!r) { tab("routes"); return; }
+    var stops = routeStops(r);
+    var i = view.i, o = byId(stops[i]);
+    if (!o) { back(); return; }
+
+    progress[r.id] = i;
+    storeSet("progress", progress);
+    titleEl.textContent = routeTitle(r);
+
+    var thread = "";
+    for (var j = 0; j < stops.length; j++){
+      if (j) thread += '<s class="' + (j <= i ? "done" : "") + '"></s>';
+      thread += '<i class="' + (j < i ? "done" : (j === i ? "now" : "")) + '"></i>';
+    }
+
+    var html = '<div class="sheet">';
+    html += '<div class="pos-thread">' + thread + "</div>";
+    html += '<div class="pos-label">Точка ' + (i + 1) + " из " + stops.length + "</div>";
+    html += '<div class="cheat-name">' + esc(o.name) + "</div>";
+    var nq = openQ(o.id);
+    if (nq) html += '<div class="q-line"><span class="qmark">' + nq + "</span>" +
+                    (nq === 1 ? "открытый вопрос" : "открытых вопроса") + "</div>";
+
+    if (o.photos && o.photos.length && o.photos[0].url) {
+      html += '<div class="photo-slot" style="margin-top:16px">' +
+              '<img src="' + esc(o.photos[0].url) + '" alt="' + esc(o.name) + '"></div>';
+    }
+
+    html += '<ul class="theses" style="margin-top:4px">';
+    (o.theses || []).forEach(function(t){ html += thesisHTML(t); });
+    html += "</ul>";
+
+    html += '<details class="service"><summary>Служебное</summary><div class="service-body">';
+    html += '<div class="addr">' + esc(o.address) + (o.metro ? "<br>метро " + esc(o.metro) : "") + "</div>";
+    if (o.note) html += "<div>" + esc(o.note) + "</div>";
+    if (o.source) html += "<div>Источник: " + esc(o.source) + "</div>";
+    html += '<div class="stamp ' + stampState(o) + '">' + stampText(o) + "</div></div></details></div>";
+
+    html += (i + 1 < stops.length)
+      ? '<button class="primary" id="next">Дальше →</button>'
+      : '<button class="primary" id="done">Прогулка окончена</button>';
+    html += askHTML(o.id);
+    html += '<button class="secondary" id="open-obj">Открыть карточку целиком</button>';
+    html += '<button class="secondary" id="to-route">К списку точек</button>';
+    app.innerHTML = html;
+    var qic = document.getElementById("qi");
+    if (qic) qic.focus();
+
+    on(function(e){
+      if (askHandle(e, o.id)) return;
+      if (e.target.closest("#next")) { go({ name: "cheat", route: r.id, i: i + 1 }, true); return; }
+      if (e.target.closest("#done")) { progress[r.id] = 0; storeSet("progress", progress); tab("routes"); return; }
+      if (e.target.closest("#open-obj")) { go({ name: "object", id: o.id }); return; }
+      if (e.target.closest("#to-route")) back();
+    });
+  }
+
+  /* ── 4. База ──────────────────────────────────────────── */
+  function facetsOf(o){ return (o.styles || []).concat(o.tags || []).concat([o.type]); }
+
+  function viewBase(){
+    titleEl.textContent = "База";
+
+    var people = {}, styles = {}, tags = {}, types = {}, shown = {};
+    DATA.objects.forEach(function(o){
+      (o.people || []).forEach(function(p){
+        if (!p.name) return;
+        people[p.name] = (people[p.name] || 0) + 1;
+        if (p.show === true) shown[p.name] = true;
+        if (p.show === false) shown[p.name] = false;
+      });
+      (o.styles || []).forEach(function(v){ styles[v] = (styles[v] || 0) + 1; });
+      (o.tags   || []).forEach(function(v){ tags[v]   = (tags[v]   || 0) + 1; });
+      if (o.type) types[o.type] = (types[o.type] || 0) + 1;
+    });
+
+    var html = head("Картотека", "База объектов");
+    html += '<input class="search" id="q" type="search" placeholder="Поиск: название, адрес, имя, тезис" value="' + esc(filter.q) + '">';
+    html += peopleGroup(people, shown);
+    html += fgroup("Стиль", "style", styles);
+    html += fgroup("Тема", "tag", tags);
+    html += fgroup("Тип объекта", "type", types);
+    html += '<div id="results" style="margin-top:16px"></div>';
+    app.innerHTML = html;
+    paintResults();
+
+    document.getElementById("q").addEventListener("input", function(){
+      filter.q = this.value;
+      paintResults();
+    });
+    on(function(e){
+      if (e.target.closest("#toggle-people")) { allPeople = !allPeople; render(); return; }
+      var c = e.target.closest("[data-kind]");
+      if (c) {
+        var k = c.getAttribute("data-kind"), v = c.getAttribute("data-value");
+        var same = filter.facet && filter.facet.kind === k && filter.facet.value === v;
+        filter.facet = same ? null : { kind: k, value: v };
+        render();
+        return;
+      }
+      var r = e.target.closest("[data-obj]");
+      if (r) go({ name: "object", id: r.getAttribute("data-obj") });
+    });
+  }
+
+  /* Кого показывать в списке имён:
+     по умолчанию — у кого два и более объекта (только они образуют маршрут);
+     "show": true в data.json показывает принудительно, "show": false прячет. */
+  function personShown(name, count, shown){
+    if (shown[name] === true) return true;
+    if (shown[name] === false) return false;
+    return count >= 2;
+  }
+  function peopleGroup(people, shown){
+    var names = Object.keys(people).sort();
+    if (!names.length) return "";
+    var main = names.filter(function(n){ return personShown(n, people[n], shown); });
+    var rest = names.filter(function(n){ return main.indexOf(n) === -1; });
+    var list = allPeople ? names : (main.length ? main : names);
+
+    var active = filter.facet && filter.facet.kind === "person";
+    var h = '<details class="fgroup"' + (active ? " open" : "") +
+            "><summary>Архитекторы и дизайнеры<i>" +
+            (allPeople || !main.length ? names.length : main.length + " из " + names.length) +
+            '</i></summary><div class="chips">';
+    list.forEach(function(v){
+      var isOn = active && filter.facet.value === v;
+      h += '<button class="chip' + (isOn ? " on" : "") + '" data-kind="person" data-value="' +
+           esc(v) + '">' + esc(v) + ' <span style="opacity:.55">' + people[v] + "</span></button>";
+    });
+    if (rest.length && main.length) {
+      h += '<button class="chip" id="toggle-people" style="border-style:dashed">' +
+           (allPeople ? "показать только главных" : "показать всех · " + names.length) + "</button>";
+    }
+    return h + "</div></details>";
+  }
+
+  /* Одна группа связей: свёрнута, пока в ней ничего не выбрано */
+  function fgroup(label, kind, pool){
+    var list = Object.keys(pool).sort();
+    if (!list.length) return "";
+    var active = filter.facet && filter.facet.kind === kind;
+    var h = '<details class="fgroup"' + (active ? " open" : "") + "><summary>" +
+            esc(label) + "<i>" + list.length + "</i></summary><div class=\"chips\">";
+    list.forEach(function(v){
+      var isOn = active && filter.facet.value === v;
+      h += '<button class="chip' + (isOn ? " on" : "") + '" data-kind="' + kind +
+           '" data-value="' + esc(v) + '">' + (kind === "tag" ? "#" : "") + esc(v) +
+           " <span style=\"opacity:.55\">" + pool[v] + "</span></button>";
+    });
+    return h + "</div></details>";
+  }
+
+  function paintResults(){
+    var box = document.getElementById("results");
+    if (!box) return;
+    var list = matching();
+    box.innerHTML = list.length ? list.map(recHTML).join("") : '<p class="empty">Ничего не нашлось.</p>';
+  }
+  function matching(){
+    var q = filter.q.trim().toLowerCase();
+    return DATA.objects.filter(function(o){
+      if (!hasFacet(o, filter.facet)) return false;
+      if (!q) return true;
+      var hay = [o.name, o.nameFr, o.address, o.metro, o.note].concat(o.theses || [])
+        .concat((o.people || []).map(function(p){ return p.name; })).join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+  function hasFacet(o, f){
+    if (!f) return true;
+    if (f.kind === "person") return (o.people || []).some(function(p){ return p.name === f.value; });
+    if (f.kind === "style")  return (o.styles || []).indexOf(f.value) !== -1;
+    if (f.kind === "tag")    return (o.tags   || []).indexOf(f.value) !== -1;
+    if (f.kind === "type")   return o.type === f.value;
+    return true;
+  }
+  function recHTML(o){
+    return '<button class="rec" data-obj="' + esc(o.id) + '">' +
+             '<span class="line1"><span class="flag ' + stampState(o) + '"></span>' +
+             '<span class="nm">' + esc(o.name) + "</span>" +
+             (openQ(o.id) ? '<span class="qmark">' + openQ(o.id) + "</span>" : "") + "</span>" +
+             '<span class="line2">' + esc(o.type) + " · " + esc(o.arr) + "-й округ</span></button>";
+  }
+
+  /* ── 5. Карточка объекта ──────────────────────────────── */
+  function viewObject(){
+    var o = byId(view.id);
+    if (!o) { back(); return; }
+    titleEl.textContent = "Объект";
+
+    var html = head("Объект", o.name) + '<div class="sheet">';
+    if (o.photos && o.photos.length && o.photos[0].url) {
+      html += '<div class="photo-slot"><img src="' + esc(o.photos[0].url) + '" alt="' + esc(o.name) + '"></div>';
+    }
+    html += '<div class="rec-head"><span>' + esc(o.type) + "</span><span>" + esc(o.arr) + "-й округ</span></div>";
+    if (o.nameFr) html += '<div class="obj-fr" style="margin-top:12px">' + esc(o.nameFr) + "</div>";
+
+    if (o.people && o.people.length) {
+      html += '<div class="people">';
+      o.people.forEach(function(p){
+        html += '<button class="person" data-person="' + esc(p.name) + '"><b>' + esc(p.name) +
+                "</b><span>" + esc(p.role) + "</span></button>";
+      });
+      html += "</div>";
+    }
+
+    var chips = (o.styles || []).concat(o.tags || []);
+    if (chips.length) {
+      html += '<div class="chips" style="margin-top:16px;margin-bottom:0">';
+      chips.forEach(function(c){ html += '<button class="chip" data-facet="' + esc(c) + '">#' + esc(c) + "</button>"; });
+      html += "</div>";
+    }
+
+    html += '<div class="h-sec">Тезисы</div><ul class="theses" style="margin-top:0">';
+    (o.theses || []).forEach(function(t){ html += thesisHTML(t); });
+    html += "</ul>";
+
+    html += '<details class="service" open><summary>Служебное</summary><div class="service-body">';
+    html += '<div class="addr">' + esc(o.address) + (o.metro ? "<br>метро " + esc(o.metro) : "") + "</div>";
+    if (o.note) html += "<div>" + esc(o.note) + "</div>";
+    if (o.source) html += "<div>Источник: " + esc(o.source) + "</div>";
+    html += '<div class="stamp ' + stampState(o) + '">' + stampText(o) + "</div>";
+    if (o.perishable) html += '<div style="font-size:13px">Отмечено как скоропортящееся: часы, цены или доступ могут измениться.</div>';
+    html += "</div></details>";
+
+    var mine = questions.filter(function(q){ return q.obj === o.id; });
+    if (mine.length) {
+      html += '<div class="h-sec">Вопросы с прогулок</div>';
+      mine.forEach(function(q){
+        html += '<div class="q-item' + (q.done ? " done" : "") + '"><p class="q-text">' + esc(q.text) +
+                '</p><div class="q-date">' + esc(q.date) + (q.done ? " · отвечено" : "") + "</div></div>";
+      });
+    }
+    html += askHTML(o.id) + "</div>";
+    app.innerHTML = html;
+    var qio = document.getElementById("qi");
+    if (qio) qio.focus();
+
+    on(function(e){
+      if (askHandle(e, o.id)) return;
+      var p = e.target.closest("[data-person]");
+      if (p) { go({ name: "facet", kind: "person", value: p.getAttribute("data-person") }); return; }
+      var c = e.target.closest("[data-facet]");
+      if (c) go({ name: "facet", kind: "tag", value: c.getAttribute("data-facet") });
+    });
+  }
+
+  /* ── 6. Все объекты по связи ──────────────────────────── */
+  function facetMatches(){
+    if (view.kind === "person") {
+      return DATA.objects.filter(function(o){
+        return (o.people || []).some(function(p){ return p.name === view.value; });
+      });
+    }
+    return DATA.objects.filter(function(o){ return facetsOf(o).indexOf(view.value) !== -1; });
+  }
+  function viewFacet(){
+    titleEl.textContent = view.kind === "person" ? view.value : "#" + view.value;
+    var list = facetMatches();
+    var html = head("Связи", view.kind === "person" ? view.value : "#" + view.value);
+    html += '<div class="h-sec">' +
+      (view.kind === "person" ? "Объекты этого человека" : "Объекты с этой связью") + "</div>";
+    html += list.map(recHTML).join("");
+    if (list.length > 1) html += '<button class="primary" id="make">Собрать маршрут из этих ' + list.length + "</button>";
+    app.innerHTML = html;
+
+    on(function(e){
+      if (e.target.closest("#make")) {
+        draft = { title: view.value, ids: list.map(function(o){ return o.id; }) };
+        go({ name: "build" });
+        return;
+      }
+      var r = e.target.closest("[data-obj]");
+      if (r) go({ name: "object", id: r.getAttribute("data-obj") });
+    });
+  }
+
+  /* ── 7. Сборка маршрута ───────────────────────────────── */
+  function viewBuild(){
+    titleEl.textContent = "Новый маршрут";
+    var html = head("Сборка", "Новый маршрут");
+    html += '<input class="search" id="rt" type="text" placeholder="Название маршрута" value="' + esc(draft.title) + '">';
+    html += '<div class="h-sec">Точки · выбрано ' + draft.ids.length + "</div>";
+    DATA.objects.forEach(function(o){
+      var isOn = draft.ids.indexOf(o.id) !== -1;
+      html += '<button class="pick' + (isOn ? " on" : "") + '" data-pick="' + esc(o.id) + '">' +
+                '<span class="box">' + (isOn ? "✓" : "") + "</span><span>" +
+                '<span class="pnm">' + esc(o.name) + "</span>" +
+                '<span class="psub">' + esc(o.type) + " · " + esc(o.arr) + "-й округ</span></span></button>";
+    });
+    html += '<button class="primary" id="save">Сохранить маршрут</button>';
+    app.innerHTML = html;
+
+    document.getElementById("rt").addEventListener("input", function(){ draft.title = this.value; });
+
+    on(function(e){
+      var p = e.target.closest("[data-pick]");
+      if (p) {
+        var id = p.getAttribute("data-pick"), k = draft.ids.indexOf(id);
+        if (k === -1) draft.ids.push(id); else draft.ids.splice(k, 1);
+        render();
+        return;
+      }
+      if (e.target.closest("#save")) {
+        if (!draft.title.trim() || !draft.ids.length) {
+          alertBox("Дай маршруту название и выбери хотя бы одну точку.");
+          return;
+        }
+        custom.push({ id: "r" + Date.now(), title: draft.title.trim(), when: "", stops: draft.ids.slice() });
+        storeSet("routes", custom);
+        draft = { title: "", ids: [] };
+        tab("routes");
+      }
+    });
+  }
+
+  /* ── 8. Быстрые заметки ───────────────────────────────── */
+  function viewNotes(){
+    titleEl.textContent = "Заметка на ходу";
+    var html = head("На ходу", "Быстрая заметка");
+    html += '<textarea class="note-input" id="ni" placeholder="Увидела витрину — запиши два слова и ссылку. Вечером разберёшь."></textarea>';
+    html += '<button class="primary" id="add" style="margin-top:12px">Записать</button>';
+    html += '<div class="h-sec">Записано</div>';
+    if (!notes.length) html += '<p class="empty">Пока пусто.</p>';
+    notes.forEach(function(n, idx){
+      html += '<div class="note-item"><div><time>' + esc(n.date) + "</time><p>" + esc(n.text) +
+              '</p></div><button class="del" data-del="' + idx + '" aria-label="Удалить">×</button></div>';
+    });
+    html += '<p class="saving">Заметки хранятся в твоём Telegram и видны только тебе.</p>';
+    app.innerHTML = html;
+
+    on(function(e){
+      if (e.target.closest("#add")) {
+        var t = document.getElementById("ni").value.trim();
+        if (!t) return;
+        var d = new Date();
+        notes.unshift({
+          text: t,
+          date: ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "." + String(d.getFullYear()).slice(-2)
+        });
+        if (notes.length > 40) notes = notes.slice(0, 40);
+        storeSet("notes", notes);
+        render();
+        return;
+      }
+      var del = e.target.closest("[data-del]");
+      if (del) {
+        notes.splice(parseInt(del.getAttribute("data-del"), 10), 1);
+        storeSet("notes", notes);
+        render();
+      }
+    });
+  }
+
+  function confirmBox(msg, ok){
+    if (tg && typeof tg.showConfirm === "function") {
+      try { tg.showConfirm(msg, function(yes){ if (yes) ok(); }); return; } catch (e) {}
+    }
+    if (window.confirm(msg)) ok();
+  }
+  function viewReorder(){
+    var r = routeById(view.route);
+    if (!r) { tab("routes"); return; }
+    titleEl.textContent = "Состав маршрута";
+    var stops = routeStops(r);
+
+    var html = head("Порядок", routeTitle(r));
+    html += '<p style="font-size:14px;color:var(--ink-soft);margin:0 0 16px">' +
+            'Стрелки переставляют точку выше или ниже. Крестик убирает её из маршрута — сам объект остаётся в базе.</p>';
+
+    if (!stops.length) html += '<p class="empty">В маршруте пока нет точек.</p>';
+    stops.forEach(function(id, i){
+      var o = byId(id);
+      if (!o) return;
+      html += '<div class="ord"><span class="num">' + (i + 1) + "</span>" +
+              '<span><span class="nm">' + esc(o.name) + "</span>" +
+              '<span class="sub">' + esc(o.type) + " · " + esc(o.arr) + "-й округ</span></span>" +
+              '<span class="acts">' +
+                '<button data-up="' + i + '"' + (i === 0 ? " disabled" : "") + ' aria-label="Выше">↑</button>' +
+                '<button data-down="' + i + '"' + (i === stops.length - 1 ? " disabled" : "") + ' aria-label="Ниже">↓</button>' +
+                '<button class="rm" data-rm="' + i + '" aria-label="Убрать">×</button>' +
+              "</span></div>";
+    });
+
+    var rest = DATA.objects.filter(function(o){ return stops.indexOf(o.id) === -1; });
+    if (rest.length) {
+      html += '<div class="h-sec">Добавить точку</div>';
+      rest.forEach(function(o){
+        html += '<button class="rec" data-add="' + esc(o.id) + '">' +
+                '<span class="line1"><span class="nm">＋ ' + esc(o.name) + "</span></span>" +
+                '<span class="line2">' + esc(o.type) + " · " + esc(o.arr) + "-й округ</span></button>";
+      });
+    }
+    html += '<button class="primary" id="ord-done">Готово</button>';
+    app.innerHTML = html;
+
+    on(function(e){
+      var arr = routeStops(r).slice();
+      var b;
+      if ((b = e.target.closest("[data-up]"))) {
+        var u = parseInt(b.getAttribute("data-up"), 10);
+        arr.splice(u - 1, 0, arr.splice(u, 1)[0]);
+      } else if ((b = e.target.closest("[data-down]"))) {
+        var d = parseInt(b.getAttribute("data-down"), 10);
+        arr.splice(d + 1, 0, arr.splice(d, 1)[0]);
+      } else if ((b = e.target.closest("[data-rm]"))) {
+        arr.splice(parseInt(b.getAttribute("data-rm"), 10), 1);
+      } else if ((b = e.target.closest("[data-add]"))) {
+        arr.push(b.getAttribute("data-add"));
+      } else if (e.target.closest("#ord-done")) {
+        back();
+        return;
+      } else {
+        return;
+      }
+      setStops(r, arr);
+      /* порядок изменился — прогресс сбрасываем, иначе укажет не на ту точку */
+      progress[r.id] = 0;
+      storeSet("progress", progress);
+      render();
+    });
+  }
+
+  function viewQuestions(){
+    titleEl.textContent = "Вопросы";
+    var open = questions.filter(function(q){ return !q.done; });
+    var done = questions.filter(function(q){ return q.done; });
+    var html = head("Долги", "Вопросы с прогулок");
+    html += '<p style="font-size:14px;color:var(--ink-soft);margin:0 0 16px">' +
+            'Здесь то, о чём спросили на прогулке, а ты не знала ответа. Дома найдёшь — отметь.</p>';
+
+    if (!open.length) html += '<p class="empty">Открытых вопросов нет.</p>';
+    open.forEach(function(q){ html += qHTML(q); });
+
+    if (done.length) {
+      html += '<div class="h-sec">Отвеченные · ' + done.length + "</div>";
+      done.forEach(function(q){ html += qHTML(q); });
+    }
+    app.innerHTML = html;
+
+    on(function(e){
+      var d = e.target.closest("[data-qdone]");
+      if (d) {
+        var id = d.getAttribute("data-qdone");
+        questions.forEach(function(q){ if (q.id === id) q.done = !q.done; });
+        storeSet("questions", questions);
+        render();
+        return;
+      }
+      var x = e.target.closest("[data-qdel]");
+      if (x) {
+        var did = x.getAttribute("data-qdel");
+        questions = questions.filter(function(q){ return q.id !== did; });
+        storeSet("questions", questions);
+        render();
+        return;
+      }
+      var go2 = e.target.closest("[data-qobj]");
+      if (go2) go({ name: "object", id: go2.getAttribute("data-qobj") });
+    });
+  }
+  function qHTML(q){
+    var o = byId(q.obj);
+    return '<div class="q-item' + (q.done ? " done" : "") + '">' +
+           (o ? '<button class="q-where" data-qobj="' + esc(o.id) + '">' + esc(o.name) + "</button>" : "") +
+           '<p class="q-text">' + esc(q.text) + "</p>" +
+           '<div class="q-date">' + esc(q.date) + "</div>" +
+           '<div class="q-acts">' +
+             '<button data-qdone="' + esc(q.id) + '">' + (q.done ? "Вернуть в работу" : "Ответ найден") + "</button>" +
+             '<button data-qdel="' + esc(q.id) + '">Удалить</button>' +
+           "</div></div>";
+  }
+
+  function alertBox(msg){
+    if (tg && typeof tg.showAlert === "function") { try { tg.showAlert(msg); return; } catch (e) {} }
+    window.alert(msg);
+  }
+
+  /* ── Загрузка ─────────────────────────────────────────── */
+  function embedded(){
+    var el = document.getElementById("fallback-data");
+    if (!el) return null;
+    var j = safeParse(el.textContent);
+    return (j && Array.isArray(j.objects)) ? j : null;
+  }
+
+  function start(json){
+    DATA = json;
+    Promise.all([storeGet("routes"), storeGet("progress"), storeGet("notes"), storeGet("rmeta"), storeGet("questions")]).then(function(saved){
+      custom   = Array.isArray(saved[0]) ? saved[0] : [];
+      progress = (saved[1] && typeof saved[1] === "object") ? saved[1] : {};
+      notes    = Array.isArray(saved[2]) ? saved[2] : [];
+      rmeta    = (saved[3] && typeof saved[3] === "object") ? saved[3] : {};
+      questions = Array.isArray(saved[4]) ? saved[4] : [];
+      view = { name: "routes" };
+      stack = [];
+      render();
+    });
+  }
+
+  function failScreen(reason){
+    tabbar.hidden = true;
+    backEl.hidden = true;
+    titleEl.textContent = "";
+    var has = !!embedded();
+    app.innerHTML =
+      '<div class="fail"><h2>База не загрузилась</h2>' +
+      '<p>Файл <b>data.json</b> не нашёлся рядом с приложением. Так бывает, когда ' +
+      'index.html открыт сам по себе — в превью или без второго файла на хостинге.</p>' +
+      '<p style="font-size:12.5px;color:var(--ink-faint)">' + esc(reason) + "</p>" +
+      (has ? '<button class="primary" id="use-embedded" style="max-width:280px;margin:0 auto">Посмотреть на встроенной копии</button>' : "") +
+      '<button class="secondary" id="retry" style="max-width:280px;margin:10px auto 0">Попробовать снова</button></div>';
+
+    document.getElementById("retry").addEventListener("click", boot);
+    var ue = document.getElementById("use-embedded");
+    if (ue) ue.addEventListener("click", function(){ start(embedded()); });
+  }
+
+  function boot(){
+    if (FORCE_EMBEDDED) {
+      var e = embedded();
+      if (e) { start(e); return; }
+    }
+    app.innerHTML = '<p class="empty">Загружаю картотеку…</p>';
+    fetch("data.json?v=" + Date.now(), { cache: "no-store" })
+      .then(function(res){
+        if (!res.ok) throw new Error("Ответ сервера: " + res.status);
+        return res.json();
+      })
+      .then(function(json){
+        if (!json || !Array.isArray(json.objects)) throw new Error("В файле нет списка объектов");
+        start(json);
+      })
+      .catch(function(err){
+        failScreen(err && err.message ? err.message : String(err));
+      });
+  }
+
+  if (tg && tg.BackButton) { try { tg.BackButton.onClick(back); } catch (e) {} }
+  boot();
+})();
+</script>
+</body>
+</html>
