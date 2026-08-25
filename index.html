@@ -844,6 +844,33 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
     app.addEventListener("click", handler);
   }
 
+  /* Ссылка, которая откроет приложение сразу на этой карточке */
+  function shareLink(id){
+    var tgApp = DATA.meta && DATA.meta.tgApp;
+    if (tg && tgApp) return tgApp + "?startapp=" + encodeURIComponent(id);
+    return location.origin + location.pathname + "?o=" + encodeURIComponent(id);
+  }
+  /* Копирование с запасными путями: буфер → execCommand → выделить руками */
+  function copyText(text, btn, okLabel){
+    var done = function(){ if (btn) btn.textContent = okLabel || "Ссылка скопирована"; };
+    var legacy = function(){
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.cssText = "position:fixed;top:-1000px;left:0;opacity:0";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+      if (ok) done(); else if (btn) btn.textContent = text;
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, legacy);
+    } else {
+      legacy();
+    }
+  }
+
   /* Тезис, начатый со знака вопроса, получает метку «уточнить» */
   function thesisHTML(t){
     var ask = /^\?\s*/.test(t);
@@ -934,6 +961,7 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
               "</button>";
     });
     html += '<button class="plaque ghost" id="new-route"><span class="name">+ собрать новый</span></button>';
+    html += storageNote();
     app.innerHTML = html;
 
     on(function(e){
@@ -1049,24 +1077,7 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
 
     on(function(e){
       if (!e.target.closest("#copy")) return;
-      var ta = document.getElementById("dg");
-      var btn = document.getElementById("copy");
-      var done = function(){ btn.textContent = "Скопировано"; };
-      var manual = function(){
-        ta.focus(); ta.select();
-        btn.textContent = "Текст выделен — скопируй вручную";
-      };
-      var legacy = function(){
-        ta.focus(); ta.select();
-        var ok = false;
-        try { ok = document.execCommand("copy"); } catch (err) {}
-        ok ? done() : manual();
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(done, legacy);
-      } else {
-        legacy();
-      }
+      copyText(txt, document.getElementById("copy"), "Скопировано");
     });
   }
 
@@ -1307,13 +1318,28 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
                 '</p><div class="q-date">' + esc(q.date) + (q.done ? " · отвечено" : "") + "</div></div>";
       });
     }
-    html += askHTML(o.id) + "</div>";
+    html += askHTML(o.id);
+    html += '<button class="secondary" id="share">Поделиться карточкой</button>';
+    html += "</div>";
     app.innerHTML = html;
     var qio = document.getElementById("qi");
     if (qio) qio.focus();
 
     on(function(e){
       if (askHandle(e, o.id)) return;
+      var sh = e.target.closest("#share");
+      if (sh) {
+        var url = shareLink(o.id);
+        if (tg && typeof tg.openTelegramLink === "function" && DATA.meta && DATA.meta.tgApp) {
+          try {
+            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url) +
+              "&text=" + encodeURIComponent(o.name + " · от бульвара до балкона"));
+            return;
+          } catch (err) {}
+        }
+        copyText(url, sh);
+        return;
+      }
       var p = e.target.closest("[data-person]");
       if (p) { go({ name: "facet", kind: "person", value: p.getAttribute("data-person") }); return; }
       var c = e.target.closest("[data-facet]");
@@ -1402,7 +1428,7 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
       html += '<div class="note-item"><div><time>' + esc(n.date) + "</time><p>" + esc(n.text) +
               '</p></div><button class="del" data-del="' + idx + '" aria-label="Удалить">×</button></div>';
     });
-    html += '<p class="saving">Заметки хранятся в твоём Telegram и видны только тебе.</p>';
+    html += storageNote();
     app.innerHTML = html;
 
     on(function(e){
@@ -1547,6 +1573,15 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
            "</div></div>";
   }
 
+  /* Где на самом деле сохраняются маршруты, вопросы и заметки */
+  function storageNote(){
+    return cloud
+      ? '<p class="saving">Сохраняется в твоём Telegram — маршруты, вопросы и заметки ' +
+        'видны на всех твоих устройствах.</p>'
+      : '<p class="saving" style="color:var(--warn)">Открыто вне Telegram: сохраняется только ' +
+        'в этом браузере и на другие устройства не переедет. Открой через бота, чтобы синхронизировалось.</p>';
+  }
+
   function alertBox(msg){
     if (tg && typeof tg.showAlert === "function") { try { tg.showAlert(msg); return; } catch (e) {} }
     window.alert(msg);
@@ -1560,6 +1595,19 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
     return (j && Array.isArray(j.objects)) ? j : null;
   }
 
+  /* Пришли по ссылке на конкретный объект? */
+  function deepId(){
+    var p = null;
+    try {
+      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) p = tg.initDataUnsafe.start_param;
+    } catch (e) {}
+    if (!p) {
+      var m = /[?&]o=([^&#]+)/.exec(location.search);
+      if (m) { try { p = decodeURIComponent(m[1]); } catch (e) { p = m[1]; } }
+    }
+    return p;
+  }
+
   function start(json){
     DATA = json;
     Promise.all([storeGet("routes"), storeGet("progress"), storeGet("notes"), storeGet("rmeta"), storeGet("questions")]).then(function(saved){
@@ -1568,8 +1616,14 @@ textarea.note-input{width:100%;border:1px solid var(--rule);border-radius:10px;p
       notes    = Array.isArray(saved[2]) ? saved[2] : [];
       rmeta    = (saved[3] && typeof saved[3] === "object") ? saved[3] : {};
       questions = Array.isArray(saved[4]) ? saved[4] : [];
-      view = { name: "routes" };
-      stack = [];
+      var deep = deepId();
+      if (deep && byId(deep)) {
+        view = { name: "object", id: deep };
+        stack = [{ name: "base" }];
+      } else {
+        view = { name: "routes" };
+        stack = [];
+      }
       render();
     });
   }
